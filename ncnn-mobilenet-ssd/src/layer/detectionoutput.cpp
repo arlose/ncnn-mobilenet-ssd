@@ -31,40 +31,13 @@ DetectionOutput::DetectionOutput()
 #if NCNN_STRING
 int DetectionOutput::load_param(FILE* paramfp)
 {
-//     float ratio;
-//     float scale;
-    /*
-    int nscan = fscanf(paramfp, "%d %d %d %d %f %d",
-                       &feat_stride, &base_size, &pre_nms_topN, &after_nms_topN,
-                       &nms_thresh, &min_size);
-    if (nscan != 6)
-    {
-        fprintf(stderr, "PriorBox load_param failed %d\n", nscan);
-        return -1;
-    }
-    */
 
     return 0;
 }
 #endif // NCNN_STRING
 int DetectionOutput::load_param_bin(FILE* paramfp)
 {
-    /*
-    fread(&feat_stride, sizeof(int), 1, paramfp);
 
-    fread(&base_size, sizeof(int), 1, paramfp);
-
-//     float ratio;
-//     float scale;
-
-    fread(&pre_nms_topN, sizeof(int), 1, paramfp);
-
-    fread(&after_nms_topN, sizeof(int), 1, paramfp);
-
-    fread(&nms_thresh, sizeof(float), 1, paramfp);
-
-    fread(&min_size, sizeof(int), 1, paramfp);
-    */
 
     return 0;
 }
@@ -72,28 +45,6 @@ int DetectionOutput::load_param_bin(FILE* paramfp)
 
 int DetectionOutput::load_param(const unsigned char*& mem)
 {
-    /*
-    feat_stride = *(int*)(mem);
-    mem += 4;
-
-    base_size = *(int*)(mem);
-    mem += 4;
-
-//     float ratio;
-//     float scale;
-
-    pre_nms_topN = *(int*)(mem);
-    mem += 4;
-
-    after_nms_topN = *(int*)(mem);
-    mem += 4;
-
-    nms_thresh = *(float*)(mem);
-    mem += 4;
-
-    min_size = *(int*)(mem);
-    mem += 4;
-    */
 
     return 0;
 }
