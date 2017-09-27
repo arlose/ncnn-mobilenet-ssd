@@ -27,7 +27,7 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
     mobilenet.load_param("ssdmobilenet.param");
     mobilenet.load_model("ssdmobilenet.bin");
 
-    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, bgr.cols, bgr.rows, 224, 224);
+    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, bgr.cols, bgr.rows, 300, 300);
 
     const float mean_vals[3] = {104.f, 117.f, 123.f};
     in.substract_mean_normalize(mean_vals, 0);
@@ -46,17 +46,31 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
         ex.set_light_mode(true);
         ex.set_num_threads(4);
         ex.input("data", in);
-        ex.extract("detection_out", out);    
+        ex.extract("data", out);    
 
     }
 
+    printf("%d %d %d\n", out.w, out.h, out.c);
+    for(int c=0;c<out.c;c++) // out.c
+    {
+        for(int h=0;h<10;h++) // out.h
+        {
+            for(int w=0;w<10;w++) // out.w
+            {
+                printf("%f ", out[c*out.w*out.h+h*out.w+w]);
+            }
+            printf("\n");
+        }
+    printf("\n\n");
+    }
+/*
     cls_scores.resize(out.c);
     for (int j=0; j<out.c; j++)
     {
         const float* prob = out.data + out.cstep * j;
         cls_scores[j] = prob[0];
     }
-
+*/
     return 0;
 }
 
