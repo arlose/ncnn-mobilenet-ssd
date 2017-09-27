@@ -57,7 +57,7 @@ endif()
 
 add_subdirectory(ssdmobilenet)
 add_subdirectory(mobilenet)
-add_subdirectory(examples)
+#add_subdirectory(examples)
 add_subdirectory(src)
 if(NOT ANDROID AND NOT IOS)
 add_subdirectory(tools)
