@@ -29,8 +29,8 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
 
     ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, bgr.cols, bgr.rows, 300, 300);
 
-    const float mean_vals[3] = {104.f, 117.f, 123.f};
-    in.substract_mean_normalize(mean_vals, 0);
+    //const float mean_vals[3] = {104.f, 117.f, 123.f};
+    //in.substract_mean_normalize(mean_vals, 0);
 
     // ncnn::Extractor ex = mobilenet.create_extractor();
     // ex.set_light_mode(true);
@@ -44,14 +44,14 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
     {
         ncnn::Extractor ex = mobilenet.create_extractor();
         ex.set_light_mode(true);
-        ex.set_num_threads(4);
+        //ex.set_num_threads(4);
         ex.input("data", in);
-        ex.extract("data", out);    
+        ex.extract("conv0", out);    
 
     }
 
     printf("%d %d %d\n", out.w, out.h, out.c);
-    for(int c=0;c<out.c;c++) // out.c
+    for(int c=0;c<1;c++) // out.c
     {
         for(int h=0;h<10;h++) // out.h
         {
@@ -61,7 +61,7 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
             }
             printf("\n");
         }
-    printf("\n\n");
+        printf("\n\n");
     }
 /*
     cls_scores.resize(out.c);
