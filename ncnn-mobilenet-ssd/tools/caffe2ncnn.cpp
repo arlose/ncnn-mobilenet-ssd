@@ -735,8 +735,11 @@ int main(int argc, char** argv)
         }
         else if (layer.type() == "DetectionOutput")
         {
-            //const caffe::ROIPoolingParameter& roi_pooling_param = layer.roi_pooling_param();
-            //fprintf(pp, " %d %d %.8f", roi_pooling_param.pooled_w(), roi_pooling_param.pooled_h(), roi_pooling_param.spatial_scale());
+            const caffe::DetectionOutputParameter& detectionoutput_param = layer.detection_output_param();
+            fprintf(pp, " %d %f %d %d %f", detectionoutput_param.num_classes(), 
+                        detectionoutput_param.nms_param().nms_threshold(), detectionoutput_param.nms_param().top_k(), 
+                        detectionoutput_param.keep_top_k(), detectionoutput_param.confidence_threshold());
+            
         }
         else if (layer.type() == "ROIPooling")
         {

@@ -25,19 +25,31 @@ DEFINE_LAYER_CREATOR(DetectionOutput)
 
 DetectionOutput::DetectionOutput()
 {
+    one_blob_only = false;
+    support_inplace = false;
 }
 
 #if NCNN_STDIO
 #if NCNN_STRING
 int DetectionOutput::load_param(FILE* paramfp)
 {
-
+    int nscan = fscanf(paramfp, "%d %f %d %d %f",
+                       &num_classes, &nms_threshold, &nms_top_k, &keep_top_k, &confidence_threshold);
+    if (nscan != 5)
+    {
+        fprintf(stderr, "DetectionOutput load_param failed %d\n", nscan);
+        return -1;
+    }
     return 0;
 }
 #endif // NCNN_STRING
 int DetectionOutput::load_param_bin(FILE* paramfp)
 {
-
+    fread(&num_classes, sizeof(int), 1, paramfp);
+    fread(&nms_threshold, sizeof(float), 1, paramfp);
+    fread(&nms_top_k, sizeof(int), 1, paramfp);
+    fread(&keep_top_k, sizeof(int), 1, paramfp);
+    fread(&confidence_threshold, sizeof(float), 1, paramfp);
 
     return 0;
 }
@@ -45,7 +57,21 @@ int DetectionOutput::load_param_bin(FILE* paramfp)
 
 int DetectionOutput::load_param(const unsigned char*& mem)
 {
+    num_classes = *(int*)(mem);
+    mem += 4;
 
+    nms_threshold = *(float*)(mem);
+    mem += 4;
+
+    nms_top_k = *(int*)(mem);
+    mem += 4;
+
+    keep_top_k = *(int*)(mem);
+    mem += 4;
+
+    confidence_threshold = *(float*)(mem);
+    mem += 4;
+    
     return 0;
 }
 

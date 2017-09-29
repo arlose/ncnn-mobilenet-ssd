@@ -36,7 +36,11 @@ public:
 
 public:
     // param
-    int feat_stride;
+    int num_classes;
+    float nms_threshold;
+    int nms_top_k;
+    int keep_top_k;
+    float confidence_threshold;
 };
 
 } // namespace ncnn
