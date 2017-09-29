@@ -123,10 +123,12 @@ int PriorBox::forward(const Mat& bottom_blobs, Mat& top_blobs) const
 
   int num_priors = 6;
   if(ar[1]==-233)
-    num_priors = 4;
+    num_priors = 3;
   int dim = layer_height * layer_width * num_priors * 4;
+  printf("priorbox num: %d, w: %d, h: %d\n", dim, layer_width, layer_height);
   
-  top_blobs.create(dim*2);
+  //top_blobs.create(1, 2, dim);
+  top_blobs.create(dim,2);
   float* top_data = top_blobs;
 
   int idx = 0;

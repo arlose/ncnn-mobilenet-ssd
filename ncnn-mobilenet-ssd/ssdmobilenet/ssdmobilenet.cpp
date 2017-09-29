@@ -46,23 +46,32 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
         ex.set_light_mode(true);
         //ex.set_num_threads(4);
         ex.input("data", in);
-        ex.extract("conv0", out);    
+        ex.extract("mbox_conf",out);
+        //ex.extract("conv6/dw_conv6/dw/relu", out);    
 
     }
 
     printf("%d %d %d\n", out.w, out.h, out.c);
-    for(int c=0;c<1;c++) // out.c
-    {
-        for(int h=0;h<10;h++) // out.h
+
+    for (int l=0;l<400;l++)
         {
-            for(int w=0;w<10;w++) // out.w
-            {
-                printf("%f ", out[c*out.w*out.h+h*out.w+w]);
-            }
-            printf("\n");
+                printf("%f ", out[l]);
+                if((l+1)%10==0)
+                    printf("\n");
         }
-        printf("\n\n");
-    }
+    // for(int c=0;c<1;c++) // out.c
+    // {
+    //     for(int h=0;h<10;h++) // out.h
+    //     {
+    //         for(int w=0;w<10;w++) // out.w
+    //         {
+    //             printf("%f ", out[c*out.w*out.h+h*out.w+w]);
+    //         }
+    //         printf("\n");
+    //     }
+    //     printf("\n\n");
+    // }
+
 /*
     cls_scores.resize(out.c);
     for (int j=0; j<out.c; j++)

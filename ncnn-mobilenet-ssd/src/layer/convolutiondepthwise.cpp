@@ -37,6 +37,9 @@ int ConvolutionDepthWise::load_param(FILE* paramfp)
         return clpr;
 
     int nscan = fscanf(paramfp, "%d", &group);
+    // int nscan = fscanffscanf(paramfp, "%d %d %d %d %d %d %d",
+    //                    &num_output, &kernel_size, &dilation, &stride, &pad, &bias_term,
+    //                    &weight_data_size);
     if (nscan != 1)
     {
         fprintf(stderr, "ConvolutionDepthWise load_param failed %d\n", nscan);
@@ -89,7 +92,7 @@ int ConvolutionDepthWise::forward(const Mat& bottom_blob, Mat& top_blob) const
         return -100;
     }
 
-//     fprintf(stderr, "ConvolutionDepthWise input %d x %d  pad = %d  ksize=%d  stride=%d\n", w, h, pad, kernel_size, stride);
+     fprintf(stderr, "ConvolutionDepthWise input %d x %d  pad = %d  ksize=%d  stride=%d\n", w, h, pad, kernel_size, stride);
 
     const int kernel_extent = dilation * (kernel_size - 1) + 1;
 
@@ -187,7 +190,8 @@ int ConvolutionDepthWise::forward(const Mat& bottom_blob, Mat& top_blob) const
     const int channels_g = channels / group;
     const int num_output_g = num_output / group;
 
-    #pragma omp parallel for collapse(2)
+    //#pragma omp parallel for collapse(2)
+    #pragma omp parallel for
     for (int g=0; g<group; g++)
     {
         for (int p=0; p<num_output_g; p++)

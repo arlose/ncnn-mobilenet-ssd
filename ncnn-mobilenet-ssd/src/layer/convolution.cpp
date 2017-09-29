@@ -35,6 +35,7 @@ int Convolution::load_param(FILE* paramfp)
     int nscan = fscanf(paramfp, "%d %d %d %d %d %d %d",
                        &num_output, &kernel_size, &dilation, &stride, &pad, &bias_term,
                        &weight_data_size);
+    //printf("%d %d %d %d %d %d %d\n", num_output, kernel_size, dilation, stride, pad, bias_term, weight_data_size);
     if (nscan != 7)
     {
         fprintf(stderr, "Convolution load_param failed %d\n", nscan);
@@ -160,6 +161,18 @@ int Convolution::load_model(FILE* binfp)
         }
     }
 
+    // if(weight_data_size==864) // conv0
+    // {
+    //     for(int l0=0;l0<1;l0++)
+    //         for(int l1=0;l1<3;l1++)
+    //             for(int l2=0;l2<3;l2++)
+    //                 for(int l3=0;l3<3;l3++)
+    //                 {
+    //                     printf("%f ", weight_data[l0*27+l1*9+l2*3+l3]);
+    //                 }
+    //     printf("\n");
+    // }
+
     return 0;
 }
 #endif // NCNN_STDIO
@@ -260,7 +273,7 @@ int Convolution::forward(const Mat& bottom_blob, Mat& top_blob) const
     int h = bottom_blob.h;
     int channels = bottom_blob.c;
 
-//     fprintf(stderr, "Convolution input %d x %d  pad = %d  ksize=%d  stride=%d\n", w, h, pad, kernel_size, stride);
+    //fprintf(stderr, "Convolution input %d x %d  pad = %d  ksize=%d  stride=%d\n", w, h, pad, kernel_size, stride);
 
     const int kernel_extent = dilation * (kernel_size - 1) + 1;
 
@@ -357,6 +370,18 @@ int Convolution::forward(const Mat& bottom_blob, Mat& top_blob) const
             outptr += outw;
         }
     }
+
+    // printf("--------------------conv output:\n");
+    // if(weight_data_size==864) // conv0
+    // {
+    //     float* outptr = top_blob.channel(0);
+    //     for(int l0=0;l0<10;l0++)
+    //         for(int l1=0;l1<10;l1++)
+    //                 {
+    //                     printf("%f ", outptr[l0*outw+l1]);
+    //                 }
+    //     printf("---------------------------- conv output\n");
+    // }
 
     return 0;
 }
