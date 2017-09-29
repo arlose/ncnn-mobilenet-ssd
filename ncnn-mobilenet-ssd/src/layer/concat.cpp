@@ -24,6 +24,41 @@ Concat::Concat()
 
 int Concat::forward(const std::vector<Mat>& bottom_blobs, std::vector<Mat>& top_blobs) const
 {
+#ifdef MobileNetSSD
+    int h = bottom_blobs[0].h;
+    int c = bottom_blobs[0].c;
+
+    // total widths
+    int top_width = 0;
+    for (size_t b=0; b<bottom_blobs.size(); b++)
+    {
+        const Mat& bottom_blob = bottom_blobs[b];
+        top_width += bottom_blob.w;
+    }
+
+    Mat& top_blob = top_blobs[0];
+    top_blob.create(top_width, h, c);
+
+    if (top_blob.empty())
+        return -100;
+
+    int cur_w=0;
+
+    for (size_t b=0; b<bottom_blobs.size(); b++)
+    {
+        const Mat& bottom_blob = bottom_blobs[b];
+        const float* ptr = bottom_blob;
+        int w = bottom_blob.w;
+        float* outptr = top_blob;
+        for(int ic=0;ic<c;ic++)
+            for(int ih=0;ih<h;ih++)
+                for(int iw=0;iw<w;iw++)
+                {
+                    outptr[cur_w+iw+ih*top_width+ic*top_width*h] = ptr[iw+ih*w+ic*h*w];
+                }
+        cur_w += w;
+    }
+#else
     int w = bottom_blobs[0].w;
     int h = bottom_blobs[0].h;
 
@@ -57,7 +92,7 @@ int Concat::forward(const std::vector<Mat>& bottom_blobs, std::vector<Mat>& top_
 
         q += channels;
     }
-
+#endif
     return 0;
 }
 

@@ -23,6 +23,8 @@
 
 namespace ncnn {
 
+#define MobileNetSSD
+
 class Layer
 {
 public:

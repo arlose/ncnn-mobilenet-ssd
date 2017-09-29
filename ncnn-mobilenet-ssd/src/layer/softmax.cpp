@@ -107,7 +107,68 @@ int Softmax::forward_inplace(Mat& bottom_top_blob) const
     // value = exp( value - global max value )
     // sum all value
     // value = value / sum
+#ifdef MobileNetSSD
+    int w = bottom_top_blob.w;
+    int h = bottom_top_blob.h;
+    int channels = bottom_top_blob.c;
+    int size = w * h;
 
+    Mat max;
+    max.create(h, channels);
+    if (max.empty())
+        return -100;
+    max.fill(-FLT_MAX);
+    for (int q=0; q<channels; q++)
+    {
+        float* ptr = bottom_top_blob.channel(q);
+        float* maxptr = max;
+        for (int ih=0;ih<h;ih++)
+            for (int i=0; i<w; i++)
+            {
+                maxptr[ih+q*h] = std::max(maxptr[ih+q*h], ptr[i+ih*w]);
+            }
+    }
+
+    #pragma omp parallel for
+    for (int q=0; q<channels; q++)
+    {
+        float* ptr = bottom_top_blob.channel(q);
+        float* maxptr = max;
+        for (int ih=0;ih<h;ih++)
+            for (int i=0; i<w; i++)
+            {
+                ptr[i+ih*w] = exp(ptr[i+ih*w]-maxptr[ih+q*h]);
+            }
+    }
+
+    Mat sum;
+    sum.create(h, channels);
+    if (sum.empty())
+        return -100;
+    sum.fill(0.f);
+    for (int q=0; q<channels; q++)
+    {
+        const float* ptr = bottom_top_blob.channel(q);
+        float* sumptr = sum;
+        for (int ih=0;ih<h;ih++)
+            for (int i=0; i<w; i++)
+            {
+                sumptr[ih+q*h] += ptr[i+ih*w];
+            }
+    }
+
+    #pragma omp parallel for
+    for (int q=0; q<channels; q++)
+    {
+        float* ptr = bottom_top_blob.channel(q);
+        float* sumptr = sum;
+        for (int ih=0;ih<h;ih++)
+            for (int i=0; i<w; i++)
+            {
+                ptr[i+ih*w] /= sumptr[ih+q*h];
+            }
+    }
+#else
     int w = bottom_top_blob.w;
     int h = bottom_top_blob.h;
     int channels = bottom_top_blob.c;
@@ -168,7 +229,7 @@ int Softmax::forward_inplace(Mat& bottom_top_blob) const
             ptr[i] /= sumptr[i];
         }
     }
-
+#endif
     return 0;
 }
 
