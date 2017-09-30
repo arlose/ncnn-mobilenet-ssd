@@ -30,7 +30,7 @@ static int detect_mobilenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
     ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, bgr.cols, bgr.rows, 300, 300);
 
     const float mean_vals[3] = {127.5f, 127.5f, 127.5f};
-    in.substract_mean_div(mean_vals, 127.5f);
+    in.substract_mean_div(mean_vals, 1.0/127.5f);
 
     // ncnn::Extractor ex = mobilenet.create_extractor();
     // ex.set_light_mode(true);
