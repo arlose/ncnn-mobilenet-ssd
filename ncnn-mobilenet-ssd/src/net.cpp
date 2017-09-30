@@ -534,7 +534,7 @@ int Net::forward_layer(int layer_index, std::vector<Mat>& blob_mats, bool lightm
     struct timeval tv;
     long t0, t1;
 
-    fprintf(stderr, "forward_layer %d %s\n", layer_index, layer->name.c_str());
+    //fprintf(stderr, "forward_layer %d %s\n", layer_index, layer->name.c_str());
 
     if (layer->one_blob_only)
     {
