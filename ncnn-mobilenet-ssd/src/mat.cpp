@@ -22,6 +22,31 @@
 
 namespace ncnn {
 
+void Mat::substract_mean_div(const float* mean_vals, const float norm_vals)
+{
+    int size = w * h;
+
+    {
+        // substract mean and normalize
+        #pragma omp parallel for
+        for (int q=0; q<c; q++)
+        {
+            float* ptr = data + cstep * q;
+            const float mean = mean_vals[q];
+            const float norm = norm_vals;
+
+            int remain = size;
+
+            for (; remain>0; remain--)
+            {
+                *ptr = (*ptr - mean) * norm;
+                ptr++;
+            }
+        }
+    }
+}
+
+
 void Mat::substract_mean_normalize(const float* mean_vals, const float* norm_vals)
 {
     int size = w * h;
