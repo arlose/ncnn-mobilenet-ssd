@@ -16,7 +16,7 @@
 #define LAYER_DETECTIONOUTPUT_H
 
 #include "layer.h"
-#include "../../build/tools/caffe.pb.h"
+//#include "../../build/tools/caffe.pb.h"
 
 namespace ncnn {
 
